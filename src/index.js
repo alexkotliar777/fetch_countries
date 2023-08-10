@@ -51,6 +51,7 @@ const createCardCountry = (el) => {
   const p = document.createElement('p')
   p.innerText = el.population;
 
+  
   const lang = document.createElement('p')
   lang.innerText = Object.values(el.languages).join(', ');
 
