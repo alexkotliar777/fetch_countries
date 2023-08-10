@@ -18,3 +18,12 @@ body {
   max-width: 320px;
   margin-bottom: 16px;
 }
+
+.pictureBig{
+  width: 300px;
+  height: auto;
+}
+.picture{
+  width: 500px;
+  height: auto;
+}

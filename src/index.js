@@ -2,22 +2,94 @@ import './css/styles.css';
 import debounce from 'lodash.debounce';
 import Notiflix from 'notiflix';
 import { fetchCountries } from './js/fetch_countries';
+import { replace } from 'lodash';
 
-const DEBOUNCE_DELAY = 300;
+const DEBOUNCE_DELAY = 1300;
 
 const input = document.querySelector('#search-box');
+const countries = document.querySelector('.country-info');
+const countryList = document.querySelector('.country-list');
 
-const searchCountries = () => {
-     const value = input.value;
-     
-     fetchCountries(value.trim()).then(response => {
-        if (response.length > 10) {
-        Notiflix.Notify.info('Too many matches found. Please enter a more specific name.')
-      }
-  }).catch(error => console.log("ERROR")); 
+const createCard = (el)=> {
+  const card = document.createElement('div');
+
+  const img = document.createElement('img');
+  img.setAttribute('src',el.flags.svg);
+  img.setAttribute('class','pictureBig');
+
+  const h2 = document.createElement('h2');
+  h2.innerText = el.name.common ;
+
+  card.append(img,h2);
+
+  return card;
 }
 
-input.addEventListener('input',debounce(searchCountries,DEBOUNCE_DELAY))
+const renderCountries = (res) => {
+  const arr = res.map(el => createCard(el));
+  countries.append(...arr);
+ }
+
+
+const createCardCountry = (el) => {
+  // флаг, название, столица, население и языки.
+  
+  const card = document.createElement('div');
+
+  const img = document.createElement('img');
+  img.setAttribute('src',el.flags.svg);
+  img.setAttribute('class','picture');
+  
+  
+
+  const h2 = document.createElement('h2');
+  h2.innerText = el.name.common ;
+
+  const h3 = document.createElement('h3');
+  h3.innerText = el.capital ;
+
+  const p = document.createElement('p')
+  p.innerText = el.population;
+
+  const lang = document.createElement('p')
+  lang.innerText = Object.values(el.languages).join(', ');
+
+  card.append(img,h2,h3,p,lang);
+  
+
+  return card;
+}
+
+const renderCountry = (res) => {
+  const array = res.map(el => createCardCountry(el))
+  countryList.append(...array)
+}
+
+
+
+function searchCountries() {
+    const value = input.value;
+
+    countryList.replaceChildren()
+    countries.replaceChildren()
+
+    fetchCountries(value.trim()).then(response => {
+        if (response.length > 10) {
+            Notiflix.Notify.info('Too many matches found. Please enter a more specific name.')
+        } else if (response.length >= 2 && response.length <= 10) {
+            renderCountries(response); 
+        } else {
+
+            renderCountry(response)
+            input.value = ''
+        }
+    }).catch(error => {
+      Notiflix.Notify.failure('Oops, there is no country with that name')
+      console.log(error)
+  });
+  }
+
+input.addEventListener('input',debounce(searchCountries,DEBOUNCE_DELAY));
 
 
 // Задание - поиск стран
@@ -60,12 +132,17 @@ input.addEventListener('input',debounce(searchCountries,DEBOUNCE_DELAY))
 // Выполни санитизацию введенной строки методом trim(), это решит проблему когда в поле ввода только пробелы или они есть в начале и в конце строки.
 
 // Интерфейс 
-// Если в ответе бэкенд вернул больше чем 10 стран, в интерфейсе пояляется уведомление о том, что имя должно быть более специфичным. Для уведомлений используй библиотеку notiflix (https://github.com/notiflix/Notiflix#readme) и выводи такую строку "Too many matches found. Please enter a more specific name.".
-// Если бэкенд вернул от 2-х до 10-х стран, под тестовым полем отображается список найденных стран. Каждый элемент списка состоит из флага и имени страны.
+// Если в ответе бэкенд вернул больше чем 10 стран, в интерфейсе пояляется уведомление о том, что имя должно быть более специфичным.
+//  Для уведомлений используй библиотеку notiflix (https://github.com/notiflix/Notiflix#readme) и выводи такую строку "Too many matches found. 
+//  Please enter a more specific name.".
+// Если бэкенд вернул от 2-х до 10-х стран, под тестовым полем отображается список найденных стран. 
+// Каждый элемент списка состоит из флага и имени страны.
 // Если результат запроса это массив с одной страной, в интерфейсе отображается разметка карточки с данными о стране: флаг, название, столица, население и языки.
 
 // Обработка ошибки 
-// Если пользователь ввёл имя страны которой не существует, бэкенд вернёт не пустой массив, а ошибку со статус кодом 404 - не найдено. Если это не обработать, то пользователь никогда не узнает о том, что поиск не дал результатов. Добавь уведомление "Oops, there is no country with that name" в случае ошибки используя библиотеку notiflix (https://github.com/notiflix/Notiflix#readme).
+// Если пользователь ввёл имя страны которой не существует, бэкенд вернёт не пустой массив, а ошибку со статус кодом 404 - не найдено.
+// Если это не обработать, то пользователь никогда не узнает о том, что поиск не дал результатов. 
+// Добавь уведомление "Oops, there is no country with that name" в случае ошибки используя библиотеку notiflix (https://github.com/notiflix/Notiflix#readme).
 
 
 // ВНИМАНИЕ 
