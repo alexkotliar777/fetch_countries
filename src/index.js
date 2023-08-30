@@ -39,6 +39,7 @@ function searchCountries() {
         renderCountries(response);
       } else {
         renderCountry(response);
+        console.log(response);
         input.value = '';
       }
     })

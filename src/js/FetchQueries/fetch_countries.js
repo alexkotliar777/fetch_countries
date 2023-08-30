@@ -1,7 +1,7 @@
 const SEARCH_URL = 'https://restcountries.com/v3.1/name/';
 const SEARCH_URL_ALL = 'https://restcountries.com/v3.1/all';
 const searchParaMS = new URLSearchParams({
-  fields: ['name', 'capital', 'population', 'flags', 'languages'],
+  fields: ['name', 'capital', 'population', 'currencies', 'flags', 'languages'],
 });
 
 export const fetchCountries = name => {

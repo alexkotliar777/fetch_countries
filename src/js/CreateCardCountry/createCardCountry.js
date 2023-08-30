@@ -11,16 +11,19 @@ export const createCardCountry = el => {
   h2.innerText = el.name.common;
   h2.setAttribute('class', 'country-name-card');
 
-  const h3 = document.createElement('h3');
-  h3.innerText = 'Capital: ' + el.capital;
+  const capital = document.createElement('h3');
+  capital.innerText = 'Capital: ' + el.capital;
 
-  const p = document.createElement('p');
-  p.innerText = 'Population: ' + el.population + ' people';
+  const currency = document.createElement('h3');
+  currency.innerText = 'Currency: ' + Object.keys(el.currencies).join(', ');
+
+  const people = document.createElement('p');
+  people.innerText = 'Population: ' + el.population + ' people';
 
   const lang = document.createElement('p');
   lang.innerText = 'Languages: ' + Object.values(el.languages).join(', ');
 
-  card.append(img, h2, h3, p, lang);
+  card.append(img, h2, capital, currency, people, lang);
 
   return card;
 };
